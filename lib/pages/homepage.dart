@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:library_project/firestore/booksinfo.dart';
 import 'package:library_project/mywidgets/myiconbutton.dart';
+import 'package:library_project/mywidgets/mytextformfield.dart';
 import 'package:library_project/pages/addbook.dart';
 import 'package:library_project/pages/readbook.dart';
-import 'package:library_project/pages/searchBook.dart';
 import 'package:library_project/variables.dart';
 
 class Homepage extends StatefulWidget {
@@ -18,6 +18,10 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   final DatabaseBooksInfo _dbInfo = DatabaseBooksInfo();
+  String searchQuery = ""; // لحفظ نص البحث
+  final TextEditingController searchController =
+      TextEditingController(); // للتحكم بالحقل
+
   bool isLoading = false;
 
   @override
@@ -33,59 +37,23 @@ class _HomepageState extends State<Homepage> {
                 child: Column(
                   children: [
                     // SizedBox(height: 15),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: ((context) => Searchbook()),
-                          ),
-                        );
+                    Mytextformfield(
+                      hintText: "ابحث عن كتابك",
+                      showShadow: false,
+                      textDirection: TextDirection.rtl,
+                      mycontroller: searchController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "الرجاء إدخال البرد الإلكتروني، لا يمكن تركه فارغا";
+                        }
                       },
 
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF462619),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xFF462619).withOpacity(
-                                0.6,
-                              ), // لون الظل ودرجة شفافيته (يفضل أن يكون خفيفاً)
-                              spreadRadius:
-                                  2, // مدى انتشار وتوسع الظل حول الكونتينر
-                              blurRadius:
-                                  10, // درجة نعومة وتغبيش الظل (كلما زاد، أصبح الظل أنعم وأكثر واقعية)
-                              offset: const Offset(
-                                0,
-                                4,
-                              ), // مكان تموضع الظل (X: لليمين/اليسار , Y: للأعلى/الأسفل) هنا مائل للأسفل قريلاً
-                            ),
-                          ],
-                        ),
-                        width: double.infinity,
-                        height: 55,
-                        child: Row(
-                          textDirection: TextDirection.rtl,
-                          children: [
-                            Icon(
-                              Icons.search,
-                              size: 25,
-                              color: Color(0xFFEFE8DE),
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              "ابحث عن كتابك",
-                              style: TextStyle(
-                                color: Color(0xFFEFE8DE),
-                                fontSize: 23,
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                          ],
-                        ),
-                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value
+                              .trim(); // 👈 هذا السطر يمرر الحروف المكتوبة للفلترة بالأسفل
+                        });
+                      },
                     ),
 
                     SizedBox(height: 20),
@@ -206,7 +174,21 @@ class _HomepageState extends State<Homepage> {
                                 );
                               }
 
-                              final docs = snapshot.data?.docs ?? [];
+                              var docs = snapshot.data?.docs ?? [];
+                              final filteredDocs = docs.where((doc) {
+                                final title = doc['title']
+                                    .toString()
+                                    .toLowerCase();
+                                final author = doc['author']
+                                    .toString()
+                                    .toLowerCase();
+                                final search = searchQuery.toLowerCase();
+
+                                return title.contains(search) ||
+                                    author.contains(search);
+                              }).toList();
+                              docs = filteredDocs;
+
                               return GridView.builder(
                                 shrinkWrap: true,
                                 physics: BouncingScrollPhysics(),
@@ -217,7 +199,7 @@ class _HomepageState extends State<Homepage> {
                                       crossAxisSpacing: 10,
                                       mainAxisSpacing: 10,
                                     ),
-                                itemCount: docs.length,
+                                itemCount: filteredDocs.length,
                                 itemBuilder: (context, index) {
                                   return InkWell(
                                     onTap: () {
@@ -246,14 +228,8 @@ class _HomepageState extends State<Homepage> {
 
                                         animType: AnimType.rightSlide,
                                         title: 'تاكيد الحذف',
-                                        desc:
-                                            'هل أنت متأكد من حذف هذا الكتاب؟',
-                                        btnCancelColor: Color.fromARGB(
-                                          255,
-                                          204,
-                                          183,
-                                          153,
-                                        ),
+                                        desc: 'هل أنت متأكد من حذف هذا الكتاب؟',
+                                        btnCancelColor: Color.fromARGB(255, 238, 217, 198),
                                         btnOkColor: Color(0xFF462619),
                                         btnOkText: "حذف",
                                         btnCancelText: "إلغاء",

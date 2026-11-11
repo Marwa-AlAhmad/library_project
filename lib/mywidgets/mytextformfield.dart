@@ -8,6 +8,7 @@ class Mytextformfield extends StatelessWidget {
   final TextDirection textDirection;
   final TextAlign textAlign;
   final TextDirection? hintTextDirection;
+  final bool showShadow;
 
   const Mytextformfield({
     super.key,
@@ -17,30 +18,26 @@ class Mytextformfield extends StatelessWidget {
     this.onChanged,
     this.textDirection = TextDirection.ltr,
     this.textAlign = TextAlign.left,
-    this.hintTextDirection,
+    this.hintTextDirection, this.showShadow = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [
+       boxShadow: showShadow 
+      ? [
           BoxShadow(
             color: Color(
-              0xFF4E342E,
-            ).withOpacity(0.5), // لون الظل ودرجة شفافيته (يفضل أن يكون خفيفاً)
-            spreadRadius: 2, // مدى انتشار وتوسع الظل حول الكونتينر
-            blurRadius:
-                10, // درجة نعومة وتغبيش الظل (كلما زاد، أصبح الظل أنعم وأكثر واقعية)
-            offset: const Offset(
-              0,
-              4,
-            ), // مكان تموضع الظل (X: لليمين/اليسار , Y: للأعلى/الأسفل) هنا مائل للأسفل قريلاً
+                0xFF462619,
+              ).withOpacity(0.5), // كود الظل القديم الخاص بكِ هنا كما هو
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-        ],
+        ]
+      : [],
       ),
       child: TextFormField(
-        
         onChanged: onChanged,
         controller: mycontroller,
         validator: validator,
@@ -52,14 +49,26 @@ class Mytextformfield extends StatelessWidget {
           hintStyle: TextStyle(fontSize: 18, color: Colors.grey[600]),
           contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
           filled: true,
-          fillColor: Colors.grey[100],
+          fillColor: Color.fromARGB(255, 238, 217, 198),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50),
             borderSide: BorderSide(color: Colors.grey),
           ),
           enabledBorder: OutlineInputBorder(
+            
             borderRadius: BorderRadius.circular(50),
-            borderSide: BorderSide(color: Color(0xFF4E342E)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 96, 80, 76),
+             width: 2),
+            
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
+              color: Color(
+                0xFF462619,
+              ), // اجعليه نفس اللون البني الدافئ لتختفي الحدود الرمادية تماماً أثناء الكتابة
+              width: 2.0, // زيادة السماكة قليلاً لتعطي إيحاءً بالتفاعل والتركيز
+            ),
           ),
         ),
       ),

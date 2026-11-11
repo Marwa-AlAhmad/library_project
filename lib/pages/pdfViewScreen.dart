@@ -75,6 +75,7 @@ class _PdfviewscreenState extends State<Pdfviewscreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
+      
       canPop: false, // 🎯 نمنع الخروج التلقائي الفارغ
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
@@ -85,8 +86,9 @@ class _PdfviewscreenState extends State<Pdfviewscreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.bookTitle),
+          title: Text(widget.bookTitle,style:TextStyle(color:Color(0xFFEFE8DE),)),
           backgroundColor: const Color(0xFF462619),
+          iconTheme: const IconThemeData(color: Color(0xFFEFE8DE)), 
         ),
         body: Stack(
           children: [

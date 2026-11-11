@@ -28,46 +28,57 @@ class _ProfilepageState extends State<Profilepage> {
                   borderRadius: BorderRadius.circular(80),
                   child: Image.asset(
                     "images/piccc.png",
-                    width: 160,
-                    height: 160,
+                    width: 150,
+                    height: 150,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
 
-              Text("Marwa"),
+              SizedBox(height: 10),
+
+              Text(
+                // 👈 هذا السطر يقرأ اسم المستخدم من حساب جوجل المسجل حالياً، وإذا لم يجده يضع نصاً بدعاً
+                FirebaseAuth.instance.currentUser?.displayName ??
+                    "قارئ متميز ✨",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF462619), // لونكِ البني الفخم المعتمد
+                ),
+              ),
 
               SizedBox(height: 10),
               Mycard(
-                title: "Account",
+                title: "حسابي",
                 iconLeading: Icons.account_box_outlined,
                 iconTrailling: Icons.arrow_back_ios_new,
               ),
 
               SizedBox(height: 10),
               Mycard(
-                title: "Language",
+                title: "اللغة",
                 iconLeading: Icons.language,
                 iconTrailling: Icons.arrow_back_ios_new,
               ),
 
               SizedBox(height: 10),
               Mycard(
-                title: "Setting",
+                title: "الإعدادات",
                 iconLeading: Icons.settings,
                 iconTrailling: Icons.arrow_back_ios_new,
               ),
 
               SizedBox(height: 10),
               Mycard(
-                title: "Notifications",
+                title: "الإشعارات",
                 iconLeading: Icons.notification_add_outlined,
                 iconTrailling: Icons.arrow_back_ios_new,
               ),
 
               SizedBox(height: 10),
               Mycard(
-                title: "Sign out",
+                title: "تسجيل الخروج",
                 iconLeading: Icons.outbond,
                 iconTrailling: Icons.arrow_back_ios_new,
                 onPressed: () async {

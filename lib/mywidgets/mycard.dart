@@ -18,10 +18,23 @@ class Mycard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Color.fromARGB(255, 238, 217, 198),
-      child: ListTile(
-        title: Text(title),
-        leading: Icon(iconLeading),
-        trailing: IconButton(icon: Icon(iconTrailling), onPressed: onPressed),
+      elevation: 5.0, // قوة الظل وبروزه (5 أو 6 ممتاز لكي لا يكون ضخماً)
+      shadowColor: const Color(0xFF462619).withOpacity(0.6),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: ListTile(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 20, color: Color(0xFF462619)),
+            textDirection: TextDirection.rtl,
+          ),
+
+          leading: Icon(iconLeading, color: Color(0xFF462619)),
+          trailing: IconButton(
+            icon: Icon(iconTrailling, color: Color(0xFF462619)),
+            onPressed: onPressed,
+          ),
+        ),
       ),
     );
   }

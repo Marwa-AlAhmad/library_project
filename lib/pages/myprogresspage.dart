@@ -139,7 +139,7 @@ class _MyprogresspageState extends State<Myprogresspage> {
                                             ),
                                   ),
                                 ),
-                                SizedBox(height: 6,),
+                                SizedBox(height: 6),
 
                                 Text(
                                   "${readingDocs[index]['title']}",
@@ -228,7 +228,7 @@ class _MyprogresspageState extends State<Myprogresspage> {
                 return Container(
                   alignment:
                       Alignment.centerRight, // محاذاة لليمين لتتناسب مع العربي
-                 // مسافة جانبية للعنوان
+                  // مسافة جانبية للعنوان
                   child: Text(
                     "كتب أنهيتها بنجاح: ($completedCount)", // عرض الرقم المحسوب تلقائياً هنا
                     textDirection: TextDirection.rtl,
@@ -341,6 +341,41 @@ class _MyprogresspageState extends State<Myprogresspage> {
                                         // fontWeight: FontWeight(900),
                                         fontSize: 17,
                                         color: Colors.grey,
+                                      ),
+                                    ),
+
+                                    SizedBox(height: 5),
+
+                                    Text(
+                                      () {
+                                        // 1. جلب الرقم الكلي للدقائق من السيرفر وتحويله لعدد صحيح
+                                        final int totalMinutes =
+                                            (docs[index]['total_minutes'] ?? 0)
+                                                .toInt();
+
+                                        // 2. حساب الساعات والدقائق المتبقية رياضياً
+                                        final int hours =
+                                            totalMinutes ~/
+                                            60; // القسمة الصحيحة لجلب الساعات
+                                        final int minutes =
+                                            totalMinutes %
+                                            60; // باقي القسمة لجلب الدقائق المتبقية
+
+                                        // 3. طريقة العرض الذكية بناءً على وجود ساعات أو دقائق فقط
+                                        if (hours > 0 && minutes > 0) {
+                                          return "وقت القراءة: $hours ساعة و $minutes دقيقة";
+                                        } else if (hours > 0) {
+                                          return "وقت القراءة: $hours ساعة";
+                                        } else {
+                                          return "وقت القراءة: $minutes دقيقة";
+                                        }
+                                      }(), // 👈 علامة القوسين هذه إجبارية لتشغيل الدالة الفورية بداخل الـ Text
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(
+                                          0xFF462619,
+                                        ), // لونكِ البني الفخم المعتمد
                                       ),
                                     ),
 
